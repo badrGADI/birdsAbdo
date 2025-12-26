@@ -1,26 +1,68 @@
 @import "tailwindcss";
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
+@theme {
+  --font-sans: var(--font-jakarta), ui-sans-serif, system-ui, sans-serif;
+  --font-serif: var(--font-playfair), ui-serif, Georgia, Cambria, "Times New Roman", Times, serif;
 }
 
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+@layer base {
+  body { 
+    font-family: var(--font-jakarta), sans-serif; 
+    overflow-x: hidden;
+    scrollbar-width: thin;
+    scrollbar-color: #dc2626 #f8fafc;
   }
 }
 
-body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+/* Custom Red Scrollbar */
+::-webkit-scrollbar { width: 8px; }
+::-webkit-scrollbar-track { background: #f8fafc; }
+::-webkit-scrollbar-thumb { 
+    background: #dc2626; 
+    border-radius: 20px;
+    border: 2px solid #f8fafc;
+}
+
+@keyframes float {
+    0% { transform: translateY(0px) rotate(0deg); }
+    50% { transform: translateY(-15px) rotate(1deg); }
+    100% { transform: translateY(0px) rotate(0deg); }
+}
+
+@keyframes subtle-zoom {
+    0% { transform: scale(1); }
+    100% { transform: scale(1.1); }
+}
+
+@keyframes marquee {
+    0% { transform: translateX(0); }
+    100% { transform: translateX(-50%); }
+}
+
+.animate-float { animation: float 5s ease-in-out infinite; }
+.animate-zoom-slow { animation: subtle-zoom 20s ease-in-out infinite alternate; }
+.animate-marquee { animation: marquee 40s linear infinite; }
+
+.glass-red {
+    background: rgba(220, 38, 38, 0.05);
+    backdrop-filter: blur(12px);
+    border: 1px solid rgba(220, 38, 38, 0.1);
+}
+
+.reveal-on-scroll {
+    opacity: 0;
+    transform: translateY(40px);
+    transition: all 1s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.reveal-on-scroll.active {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+.bento-card {
+    transition: all 0.5s cubic-bezier(0.23, 1, 0.32, 1);
+}
+.bento-card:hover {
+    transform: translateY(-8px) scale(1.01);
 }
