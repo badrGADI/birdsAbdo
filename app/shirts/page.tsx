@@ -40,10 +40,10 @@ const Shirts: React.FC = () => {
             <div className="flex items-start justify-between">
               <div>
                 <h3 className="font-bold text-slate-800 mb-1 group-hover:text-red-600 transition-colors">{item.name}</h3>
-                <p className="text-red-700 font-bold">${item.price.toFixed(2)}</p>
+                <p className="text-red-700 font-bold">${(item.price || 0).toFixed(2)}</p>
               </div>
               <button 
-                  onClick={() => addToCart({ id: item.id, name: item.name, price: item.price, image: item.imageUrl, type: 'shirt' })}
+                  onClick={() => addToCart({ id: item.id, name: item.name, price: item.price || 0, image: item.imageUrl, type: 'shirt' })}
                   className="w-10 h-10 bg-red-600 text-white rounded-xl flex items-center justify-center hover:bg-red-700 transition-colors shadow-lg"
                >
                  <i className="fas fa-plus"></i>

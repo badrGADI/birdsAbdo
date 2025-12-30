@@ -493,8 +493,9 @@ const Admin: React.FC = () => {
                 </>
                 )}
 
-                {activeTab === 'books' && (
+                {(activeTab === 'books' || activeTab === 'shirts') && (
                 <>
+                    {activeTab === 'books' && (
                     <div className="space-y-1">
                     <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest ml-1">Author</label>
                     <input className="w-full px-5 py-4 rounded-2xl border border-slate-200 focus:border-red-500 outline-none" 
@@ -502,6 +503,7 @@ const Admin: React.FC = () => {
                         onChange={e => setFormData({...formData, author: e.target.value})} 
                     />
                     </div>
+                    )}
                     <div className="space-y-1">
                     <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest ml-1">Price</label>
                     <input type="number" step="0.01" className="w-full px-5 py-4 rounded-2xl border border-slate-200 focus:border-red-500 outline-none" 
