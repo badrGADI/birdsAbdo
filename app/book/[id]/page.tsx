@@ -41,12 +41,23 @@ const BookDetails: React.FC = () => {
           
           <div className="flex items-center gap-8 border-t pt-12">
             <span className="text-5xl font-bold text-slate-900">${book.price.toFixed(2)}</span>
-            <button 
-              onClick={() => addToCart({ id: book.id, name: book.title, price: book.price, image: book.imageUrl, type: 'book' })}
-              className="flex-1 py-5 bg-red-600 text-white rounded-2xl font-black text-xs uppercase tracking-[0.3em] hover:bg-red-700 transition-all shadow-xl shadow-red-600/20 active:scale-95"
-            >
-              Add to Collection
-            </button>
+            {book.externalUrl ? (
+                 <a 
+                    href={book.externalUrl}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="flex-1 py-5 bg-red-600 text-white rounded-2xl font-black text-xs uppercase tracking-[0.3em] hover:bg-red-700 transition-all shadow-xl shadow-red-600/20 active:scale-95 text-center flex items-center justify-center gap-3"
+                 >
+                    Buy Now <i className="fas fa-external-link-alt"></i>
+                 </a>
+            ) : (
+                <button 
+                onClick={() => addToCart({ id: book.id, name: book.title, price: book.price, image: book.imageUrl, type: 'book' })}
+                className="flex-1 py-5 bg-red-600 text-white rounded-2xl font-black text-xs uppercase tracking-[0.3em] hover:bg-red-700 transition-all shadow-xl shadow-red-600/20 active:scale-95"
+                >
+                Add to Collection
+                </button>
+            )}
           </div>
         </div>
       </div>

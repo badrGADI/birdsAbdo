@@ -6,6 +6,19 @@ import { useAppContext } from '../../context/AppContext';
 
 const Books: React.FC = () => {
   const { books, addToCart } = useAppContext();
+  const [activeCategory, setActiveCategory] = React.useState('all');
+
+  const categories = [
+    { id: 'all', label: 'All Collection' },
+    { id: 'raptors', label: 'Raptors' },
+    { id: 'songbirds', label: 'Songbirds' },
+    { id: 'waterfowl', label: 'Waterfowl' },
+    { id: 'tropical', label: 'Tropical' },
+  ];
+
+  const filteredBooks = activeCategory === 'all' 
+    ? books 
+    : books.filter(book => book.category?.toLowerCase() === activeCategory);
 
   return (
     <div className="max-w-7xl mx-auto px-4 py-16">
@@ -16,8 +29,24 @@ const Books: React.FC = () => {
         </div>
       </div>
 
+      <div className="flex flex-wrap gap-4 mb-12">
+        {categories.map((cat) => (
+          <button
+            key={cat.id}
+            onClick={() => setActiveCategory(cat.id)}
+            className={`px-6 py-2 rounded-full text-xs font-bold uppercase tracking-widest transition-all ${
+              activeCategory === cat.id
+                ? 'bg-red-600 text-white shadow-lg scale-105'
+                : 'bg-white text-slate-500 border border-slate-200 hover:border-red-600 hover:text-red-600'
+            }`}
+          >
+            {cat.label}
+          </button>
+        ))}
+      </div>
+
       <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-8">
-        {books.map((book) => (
+        {filteredBooks.map((book) => (
           <div key={book.id} className="group">
             <Link href={`/book/${book.id}`} className="block aspect-[3/4] bg-slate-100 rounded-xl overflow-hidden mb-6 relative shadow-md">
               <img src={book.imageUrl} alt={book.title} className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700" />
@@ -31,12 +60,23 @@ const Books: React.FC = () => {
             <p className="text-sm text-slate-500 mb-2">{book.author}</p>
             <div className="flex items-center justify-between">
               <span className="text-red-700 font-bold text-lg">${book.price.toFixed(2)}</span>
-              <button 
-                onClick={() => addToCart({ id: book.id, name: book.title, price: book.price, image: book.imageUrl, type: 'book' })}
-                className="text-red-600 hover:text-red-800 font-bold text-sm uppercase tracking-widest"
-              >
-                Add to Cart
-              </button>
+              {book.externalUrl ? (
+                   <a 
+                      href={book.externalUrl}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="text-red-600 hover:text-red-800 font-bold text-sm uppercase tracking-widest flex items-center gap-2"
+                   >
+                      Buy <i className="fas fa-external-link-alt text-xs"></i>
+                   </a>
+              ) : (
+                  <button 
+                    onClick={() => addToCart({ id: book.id, name: book.title, price: book.price, image: book.imageUrl, type: 'book' })}
+                    className="text-red-600 hover:text-red-800 font-bold text-sm uppercase tracking-widest"
+                  >
+                    Add to Cart
+                  </button>
+              )}
             </div>
           </div>
         ))}

@@ -55,11 +55,19 @@ export const AppProvider: React.FC<{ children: ReactNode }> = ({ children }) => 
         
         // Books
         const { data: booksData } = await supabase.from('books').select('*');
-        if (booksData) setBooks(booksData.map((item: any) => ({ ...item, imageUrl: item.image_url || item.imageUrl })));
+        if (booksData) setBooks(booksData.map((item: any) => ({ 
+            ...item, 
+            imageUrl: item.image_url || item.imageUrl,
+            externalUrl: item.external_url || item.externalUrl
+        })));
 
         // Shirts
         const { data: shirtsData } = await supabase.from('shirts').select('*');
-        if (shirtsData) setShirts(shirtsData.map((item: any) => ({ ...item, imageUrl: item.image_url || item.imageUrl })));
+        if (shirtsData) setShirts(shirtsData.map((item: any) => ({ 
+            ...item, 
+            imageUrl: item.image_url || item.imageUrl,
+            externalUrl: item.external_url || item.externalUrl
+        })));
 
         // Birds
         const { data: birdsData } = await supabase.from('birds').select('*');

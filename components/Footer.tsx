@@ -15,9 +15,8 @@ const Footer: React.FC = () => (
           Redefining our connection with the sky. We provide a red-tinted lens into the world of birds through science, art, and community.
         </p>
         <div className="flex space-x-6">
-          <a href="#" className="w-12 h-12 rounded-2xl bg-white/5 flex items-center justify-center hover:bg-red-600 hover:text-white transition-all"><i className="fab fa-instagram"></i></a>
-          <a href="#" className="w-12 h-12 rounded-2xl bg-white/5 flex items-center justify-center hover:bg-red-600 hover:text-white transition-all"><i className="fab fa-twitter"></i></a>
-          <a href="#" className="w-12 h-12 rounded-2xl bg-white/5 flex items-center justify-center hover:bg-red-600 hover:text-white transition-all"><i className="fab fa-facebook-f"></i></a>
+          <a href="https://www.instagram.com/world_of_beautiful_birds?utm_source=ig_web_button_share_sheet&igsh=ZDNlZDc0MzIxNw==" target="_blank" rel="noopener noreferrer" className="w-12 h-12 rounded-2xl bg-white/5 flex items-center justify-center hover:bg-red-600 hover:text-white transition-all"><i className="fab fa-instagram"></i></a>
+          <a href="https://web.facebook.com/share/g/1b4EzKxast/" target="_blank" rel="noopener noreferrer" className="w-12 h-12 rounded-2xl bg-white/5 flex items-center justify-center hover:bg-red-600 hover:text-white transition-all"><i className="fab fa-facebook-f"></i></a>
         </div>
       </div>
       <div>
@@ -27,6 +26,7 @@ const Footer: React.FC = () => (
           <li><Link href="/explore" className="hover:text-red-500 transition-colors">Search Species</Link></li>
           <li><Link href="/news" className="hover:text-red-500 transition-colors">Sky Chronicle</Link></li>
           <li><Link href="/customizer" className="hover:text-red-500 transition-colors">Print Studio</Link></li>
+          <li><Link href="/privacy-policy" className="hover:text-red-500 transition-colors">Privacy Policy</Link></li>
         </ul>
       </div>
       <div>

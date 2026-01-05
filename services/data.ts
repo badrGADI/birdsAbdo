@@ -45,35 +45,7 @@ export const BIRDS_DATA: Bird[] = [
   }
 ];
 
-export const NEWS_DATA: NewsArticle[] = [
-    {
-        id: 'n1',
-        title: 'Unexpected Migration Patterns Observed',
-        summary: 'Experts are puzzled by early migration of several songbird species.',
-        content: 'Recent data from bird observatories across North America indicates that several species of warblers and thrushes are migrating weeks earlier than usual. Climate scientists suggest this may be linked to unseasonably warm temperatures in their breeding grounds.',
-        author: 'Dr. Evelyn Wing',
-        date: 'October 15, 2025',
-        imageUrl: '/images/news-andes.jpg'
-    },
-    {
-        id: 'n2',
-        title: 'New Sanctuary Opens in the Andes',
-        summary: 'A protected area dedicated to the Andean Condor has been established.',
-        content: 'The "Vuelo Alto" sanctuary aims to protect the habitat of the majestic Andean Condor. This initiative, a collaboration between local governments and international conservation groups, secures over 50,000 acres of pristine mountain terrain.',
-        author: 'Carlos Pluma',
-        date: 'November 2, 2025',
-        imageUrl: '/images/news-woodpecker.jpg'
-    },
-    {
-        id: 'n3',
-        title: 'The Return of the Ivory-billed Woodpecker?',
-        summary: 'Unconfirmed sightings spark hope for the "Lord God Bird".',
-        content: 'A series of blurry photographs and audio recordings from the deep swamps of Arkansas have reignited the debate about the persistence of the Ivory-billed Woodpecker. Ornithologists are rushing to the site to verify the claims.',
-        author: 'Sarah Beaks',
-        date: 'December 10, 2025',
-        imageUrl: '/images/news-migration.jpg'
-    }
-];
+export const NEWS_DATA: NewsArticle[] = [];
 
 export const BOOKS_DATA: Book[] = [
   { 
@@ -81,6 +53,7 @@ export const BOOKS_DATA: Book[] = [
       title: 'The Sibley Guide to Birds', 
       author: 'David Allen Sibley', 
       price: 45.00, 
+      category: 'raptors',
       description: 'The definitive guide for bird identification in North America.', 
       imageUrl: '/images/bald-eagle.png' 
   },
@@ -89,6 +62,7 @@ export const BOOKS_DATA: Book[] = [
       title: 'Birds of the World', 
       author: 'Ornithology Press', 
       price: 120.00, 
+      category: 'waterfowl',
       description: 'A comprehensive encyclopedic collection of bird species globally.', 
       imageUrl: '/images/waterfowl.png' 
   },
@@ -97,6 +71,7 @@ export const BOOKS_DATA: Book[] = [
       title: 'The Genius of Birds',
       author: 'Jennifer Ackerman',
       price: 18.99,
+      category: 'songbirds',
       description: 'An exploration of the intelligence of birds and their complex social behaviors.',
       imageUrl: '/images/hummingbird.png'
   }

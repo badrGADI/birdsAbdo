@@ -41,31 +41,44 @@ const ShirtDetails: React.FC = () => {
             </p>
           </div>
 
-          <div className="grid grid-cols-3 gap-4 mb-12">
-            {availableSizes.map(size => (
-              <button 
-                key={size} 
-                onClick={() => setSelectedSize(size)}
-                className={`py-4 border rounded-xl font-bold transition-all uppercase text-xs ${
-                    selectedSize === size 
-                    ? 'bg-red-600 text-white border-red-600 shadow-lg scale-105' 
-                    : 'border-slate-200 hover:border-red-600 hover:text-red-600'
-                }`}
-              >
-                Size {size}
-              </button>
-            ))}
-          </div>
+          {!shirt.externalUrl && shirt.id !== 'f0658151-dbca-4c72-a367-482be406d38d' && (
+            <div className="grid grid-cols-3 gap-4 mb-12">
+                {availableSizes.map(size => (
+                <button 
+                    key={size} 
+                    onClick={() => setSelectedSize(size)}
+                    className={`py-4 border rounded-xl font-bold transition-all uppercase text-xs ${
+                        selectedSize === size 
+                        ? 'bg-red-600 text-white border-red-600 shadow-lg scale-105' 
+                        : 'border-slate-200 hover:border-red-600 hover:text-red-600'
+                    }`}
+                >
+                    Size {size}
+                </button>
+                ))}
+            </div>
+          )}
           
           <div className="flex items-center gap-8 border-t pt-12">
             <span className="text-5xl font-bold text-slate-900">${shirt.price.toFixed(2)}</span>
-            <button 
-              disabled={!selectedSize}
-              onClick={() => selectedSize && addToCart({ id: shirt.id, name: shirt.name, price: shirt.price, image: shirt.imageUrl, type: 'shirt', selectedSize })}
-              className="flex-1 py-5 bg-red-600 text-white rounded-2xl font-black text-xs uppercase tracking-[0.3em] hover:bg-red-700 transition-all shadow-xl shadow-red-600/20 active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed"
-            >
-              {selectedSize ? 'Add to Basket' : 'Select Size'}
-            </button>
+            {shirt.externalUrl || shirt.id === 'f0658151-dbca-4c72-a367-482be406d38d' ? (
+                 <a 
+                    href={shirt.externalUrl || 'https://teechip.com/eyessharpwingsstrong?name=apparel-classic-tshirt-lifestyle-front-85&retailProductCode=0062262901E4B7-3484F41C30A3-GS2-TC0-WHT'}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="flex-1 py-5 bg-red-600 text-white rounded-2xl font-black text-xs uppercase tracking-[0.3em] hover:bg-red-700 transition-all shadow-xl shadow-red-600/20 active:scale-95 text-center flex items-center justify-center gap-3"
+                 >
+                    Buy Product <i className="fas fa-external-link-alt"></i>
+                 </a>
+            ) : (
+                <button 
+                disabled={!selectedSize}
+                onClick={() => selectedSize && addToCart({ id: shirt.id, name: shirt.name, price: shirt.price, image: shirt.imageUrl, type: 'shirt', selectedSize })}
+                className="flex-1 py-5 bg-red-600 text-white rounded-2xl font-black text-xs uppercase tracking-[0.3em] hover:bg-red-700 transition-all shadow-xl shadow-red-600/20 active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed"
+                >
+                {selectedSize ? 'Add to Basket' : 'Select Size'}
+                </button>
+            )}
           </div>
         </div>
       </div>

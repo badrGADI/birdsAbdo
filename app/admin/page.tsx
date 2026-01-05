@@ -48,6 +48,7 @@ const Admin: React.FC = () => {
     const normalized = { ...item };
     if (normalized.scientific_name) normalized.scientificName = normalized.scientific_name;
     if (normalized.image_url) normalized.imageUrl = normalized.image_url;
+    if (normalized.external_url) normalized.externalUrl = normalized.external_url;
     setFormData(normalized);
   };
 
@@ -97,6 +98,10 @@ const Admin: React.FC = () => {
         submissionData.image_url = submissionData.imageUrl;
         delete submissionData.imageUrl;
     }
+    if (submissionData.externalUrl !== undefined) {
+        submissionData.external_url = submissionData.externalUrl;
+        delete submissionData.externalUrl;
+    }
 
     // Validation
     const finalImageUrl = submissionData.image_url || submissionData.imageUrl;
@@ -110,6 +115,9 @@ const Admin: React.FC = () => {
     if (!editingId) {
         delete submissionData.id; 
     }
+    
+    // Remove UI-only flags
+    delete submissionData.isMarkdownImport;
 
     let error;
     if (editingId) {
@@ -346,13 +354,74 @@ const Admin: React.FC = () => {
                 {editingId ? 'Edit Entry' : 'New Entry'}
             </h2>
 
+            {activeTab === 'news' && !editingId && (
+                <div className="mb-8 p-6 bg-slate-50 rounded-3xl border border-slate-100">
+                    <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest ml-1 mb-2 block">Import from Markdown</label>
+                    <div className="relative">
+                        <input 
+                            type="file"
+                            accept=".md"
+                            className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
+                            onChange={async (e) => {
+                                const file = e.target.files?.[0];
+                                if (!file) return;
+
+                                const text = await file.text();
+                                const lines = text.split('\n');
+                                const titleLineIndex = lines.findIndex(line => line.startsWith('# '));
+                                
+                                let title = '';
+                                let content = text;
+                                let imageUrl = '';
+
+                                // Extract Title
+                                if (titleLineIndex !== -1) {
+                                    title = lines[titleLineIndex].replace('# ', '').trim();
+                                } else {
+                                    title = file.name.replace('.md', '');
+                                }
+                                
+                                // Extract Image (First markdown image)
+                                const imageMatch = text.match(/!\[.*?\]\((.*?)\)/);
+                                if (imageMatch) {
+                                    imageUrl = imageMatch[1];
+                                }
+
+                                // Clean content (remove title line if found)
+                                if (titleLineIndex !== -1) {
+                                    const contentLines = [...lines];
+                                    contentLines.splice(titleLineIndex, 1);
+                                    content = contentLines.join('\n').trim();
+                                }
+
+                                setFormData({
+                                    ...formData,
+                                    title: title,
+                                    imageUrl: imageUrl,
+                                    date: new Date().toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' }),
+                                    author: 'Editorial Team',
+                                    content: content,
+                                    summary: content.substring(0, 150) + '...',
+                                    isMarkdownImport: true
+                                });
+                            }}
+                        />
+                        <div className="w-full px-5 py-4 rounded-xl border-2 border-dashed border-slate-200 hover:border-red-500 hover:bg-white transition-all flex items-center justify-center text-slate-500 gap-3 pointer-events-none bg-white">
+                             <i className="fab fa-markdown text-2xl text-slate-800"></i>
+                             <span className="text-xs font-bold uppercase tracking-widest">Upload .md File</span>
+                        </div>
+                    </div>
+                </div>
+            )}
+
             <form onSubmit={handleSubmit} className="space-y-6">
                 {/* Common Fields */}
                 <div className="space-y-1">
                 <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest ml-1">Name / Title</label>
                 <input 
                     required
-                    className="w-full px-5 py-4 rounded-2xl border border-slate-200 focus:border-red-500 outline-none transition-all shadow-sm group-focus:shadow-md"
+                    disabled={formData.isMarkdownImport}
+                    className={`w-full px-5 py-4 rounded-2xl border border-slate-200 focus:border-red-500 outline-none transition-all shadow-sm group-focus:shadow-md ${formData.isMarkdownImport ? 'bg-slate-100 text-slate-500' : ''}`}
                     value={formData.name || formData.title || ''}
                     onChange={(e) => setFormData({ ...formData, [activeTab === 'birds' || activeTab === 'shirts' ? 'name' : 'title']: e.target.value })}
                 />
@@ -364,12 +433,13 @@ const Admin: React.FC = () => {
                 <div className="flex flex-col gap-4">
                     <input 
                     placeholder="External URL..."
-                    className="w-full px-5 py-4 rounded-2xl border border-slate-200 focus:border-red-500 outline-none text-sm"
+                    disabled={formData.isMarkdownImport}
+                    className={`w-full px-5 py-4 rounded-2xl border border-slate-200 focus:border-red-500 outline-none text-sm ${formData.isMarkdownImport ? 'bg-slate-100 text-slate-500' : ''}`}
                     value={formData.imageUrl || formData.image_url || ''}
                     onChange={(e) => setFormData({ ...formData, imageUrl: e.target.value, image_url: e.target.value })}
                     />
                     
-                    <div className="relative">
+                    <div className={`relative ${formData.isMarkdownImport ? 'opacity-50 pointer-events-none' : ''}`}>
                     <input 
                         type="file" 
                         accept="image/*"
@@ -496,6 +566,7 @@ const Admin: React.FC = () => {
                 {(activeTab === 'books' || activeTab === 'shirts') && (
                 <>
                     {activeTab === 'books' && (
+                    <>
                     <div className="space-y-1">
                     <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest ml-1">Author</label>
                     <input className="w-full px-5 py-4 rounded-2xl border border-slate-200 focus:border-red-500 outline-none" 
@@ -503,6 +574,31 @@ const Admin: React.FC = () => {
                         onChange={e => setFormData({...formData, author: e.target.value})} 
                     />
                     </div>
+                    <div className="space-y-1">
+                    <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest ml-1">Category</label>
+                    <select 
+                        className="w-full px-5 py-4 rounded-2xl border border-slate-200 bg-white"
+                        value={formData.category || ''}
+                        onChange={(e) => setFormData({ ...formData, category: e.target.value })}
+                    >
+                        <option value="">Select Category...</option>
+                        <option value="Raptors">Raptors</option>
+                        <option value="Songbirds">Songbirds</option>
+                        <option value="Waterfowl">Waterfowl</option>
+                        <option value="Tropical">Tropical</option>
+                        <option value="General">General</option>
+                    </select>
+                    </div>
+                    <div className="space-y-1">
+                    <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest ml-1">Purchase Link (External)</label>
+                    <input 
+                        placeholder="https://amazon.com/..."
+                        className="w-full px-5 py-4 rounded-2xl border border-slate-200 focus:border-red-500 outline-none text-sm" 
+                        value={formData.externalUrl || ''} 
+                        onChange={e => setFormData({...formData, externalUrl: e.target.value})} 
+                    />
+                    </div>
+                    </>
                     )}
                     <div className="space-y-1">
                     <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest ml-1">Price</label>
@@ -516,6 +612,15 @@ const Admin: React.FC = () => {
 
                 {activeTab === 'shirts' && (
                 <>
+                    <div className="space-y-1">
+                    <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest ml-1">Purchase Link (External)</label>
+                    <input 
+                        placeholder="https://teechip.com/..."
+                        className="w-full px-5 py-4 rounded-2xl border border-slate-200 focus:border-red-500 outline-none text-sm" 
+                        value={formData.externalUrl || ''} 
+                        onChange={e => setFormData({...formData, externalUrl: e.target.value})} 
+                    />
+                    </div>
                     <div className="space-y-3">
                     <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest ml-1">Available Sizes</label>
                     <div className="flex flex-wrap gap-2">
@@ -532,6 +637,24 @@ const Admin: React.FC = () => {
                         </label>
                         ))}
                     </div>
+                    </div>
+
+                    <div className="space-y-1">
+                    <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest ml-1">Category (Bird Family)</label>
+                    <select 
+                        className="w-full px-5 py-4 rounded-2xl border border-slate-200 bg-white"
+                        value={formData.category || ''}
+                        onChange={(e) => setFormData({ ...formData, category: e.target.value })}
+                    >
+                        <option value="">Select Category...</option>
+                        <option value="Raptors">Raptors</option>
+                        <option value="Songbirds">Songbirds</option>
+                        <option value="Waterfowl">Waterfowl</option>
+                        <option value="Tropical">Tropical</option>
+                        <option value="Hummingbirds">Hummingbirds</option>
+                        <option value="Owls">Owls</option>
+                        <option value="General">General</option>
+                    </select>
                     </div>
                 </>
                 )}

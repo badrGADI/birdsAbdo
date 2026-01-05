@@ -30,7 +30,9 @@ export interface Book {
   price: number;
   description: string;
   synopsis?: string;
+  category?: string; // e.g. 'raptors', 'songbirds', 'general'
   imageUrl: string;
+  externalUrl?: string;
 }
 
 export interface Shirt {
@@ -40,6 +42,8 @@ export interface Shirt {
   craftsmanship?: string;
   sizes?: string[];
   imageUrl: string;
+  externalUrl?: string;
+  category?: string;
 }
 
 export interface CartItem {
