@@ -31,8 +31,8 @@ const Navbar: React.FC = () => {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between h-16">
           <div className="flex items-center">
-            <Link href="/" className="flex items-center space-x-2">
-              <i className="fas fa-kiwi-bird text-red-600 text-2xl"></i>
+            <Link href="/" className="flex items-center space-x-3">
+              <img src="/icon.png" alt="Logo" className="w-8 h-8" />
               <span className="text-xl font-bold text-slate-900 tracking-tight lowercase">the world of <span className="text-red-600">birds</span></span>
             </Link>
           </div>

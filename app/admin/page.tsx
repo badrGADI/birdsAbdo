@@ -1,6 +1,7 @@
 'use client';
 
 import React, { useState, useEffect, useMemo } from 'react';
+import { useRouter } from 'next/navigation';
 import { supabase } from '../../lib/supabase';
 import { Bird, Book, Shirt, NewsArticle } from '../../types';
 
@@ -16,8 +17,26 @@ const Admin: React.FC = () => {
   const [uploading, setUploading] = useState(false);
   const [saving, setSaving] = useState(false);
   const [expandedCategories, setExpandedCategories] = useState<string[]>([]);
+  const router = useRouter();
+
+  // Check Session
+  useEffect(() => {
+    const checkSession = async () => {
+        const { data: { session } } = await supabase.auth.getSession();
+        if (!session) {
+            router.push('/login');
+        }
+    };
+    checkSession();
+  }, [router]);
+
+  const handleSignOut = async () => {
+      await supabase.auth.signOut();
+      router.push('/login');
+  };
 
   // Fetch data when tab changes
+
   useEffect(() => {
     fetchData();
   }, [activeTab]);
@@ -314,9 +333,17 @@ const Admin: React.FC = () => {
     <div className="bg-[#fcfcfc] min-h-screen">
         <div className="max-w-7xl mx-auto px-6 py-16">
         <div className="flex flex-col md:flex-row md:items-center justify-between gap-8 mb-16">
+            <div className="flex justify-between items-start">
             <div>
             <h1 className="text-5xl font-serif text-slate-900 tracking-tighter lowercase">the world of <span className="text-red-600">birds</span> | <span className="text-slate-400 capitalize">admin</span></h1>
             <p className="text-slate-500 font-light mt-2">Live Sanctuary Database Management</p>
+            </div>
+            <button 
+                onClick={handleSignOut}
+                className="px-6 py-2 bg-slate-900 text-white rounded-xl text-[10px] font-black uppercase tracking-widest hover:bg-red-600 transition-colors"
+            >
+                Start Logout
+            </button>
             </div>
             <div className="flex space-x-1 bg-slate-100 p-1.5 rounded-2xl overflow-x-auto shadow-inner">
             {(['birds', 'books', 'shirts', 'news', 'custom_orders'] as AdminTab[]).map((tab) => (
